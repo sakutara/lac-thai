@@ -7,8 +7,26 @@ import { normalizeVietnamesePhone } from '../domain/schemas/reservation.schema';
 
 export interface ReservationTransportConfig {
   webhookUrl?: string;
-  emailRelayUrl?: string;
+  sheetUrl?: string;
+  managerEmail?: string;
+  branchMacThiBuoiEmail?: string;
+  branchXuanThuyEmail?: string;
+  sendGuestConfirmation?: boolean;
   enableLegacyPost?: boolean;
+}
+
+export function getEnvReservationConfig(): ReservationTransportConfig {
+  return {
+    webhookUrl: import.meta.env.VITE_RESERVATION_WEBHOOK_URL,
+    sheetUrl: import.meta.env.VITE_RESERVATION_SHEET_URL,
+    managerEmail: import.meta.env.VITE_RESERVATION_EMAIL_MANAGER,
+    branchMacThiBuoiEmail: import.meta.env.VITE_RESERVATION_EMAIL_MTB,
+    branchXuanThuyEmail: import.meta.env.VITE_RESERVATION_EMAIL_XT,
+    sendGuestConfirmation:
+      import.meta.env.VITE_RESERVATION_SEND_GUEST_EMAIL !== 'false',
+    enableLegacyPost:
+      import.meta.env.VITE_RESERVATION_ENABLE_LEGACY_POST === 'true',
+  };
 }
 
 export function buildLegacyFormData(input: ReservationFormInput): URLSearchParams {
@@ -55,22 +73,32 @@ export function generateReservationIcsCalendar(record: ReservationRecord): strin
 export class ReservationTransportService {
   private readonly config: ReservationTransportConfig;
 
-  constructor(config: ReservationTransportConfig = {}) {
-    this.config = config;
+  constructor(config: ReservationTransportConfig = getEnvReservationConfig()) {
+    this.config = {
+      ...getEnvReservationConfig(),
+      ...config,
+    };
+  }
+
+  public getConfig(): ReservationTransportConfig {
+    return { ...this.config };
   }
 
   public async dispatchReservation(
     record: ReservationRecord
   ): Promise<ReservationDeliveryReceipt[]> {
     const nowIso = new Date().toISOString();
-    const branchLabel =
-      record.branchId === 'mac-thi-buoi'
-        ? 'CN Mạc Thị Bưởi (Q1)'
-        : 'CN Xuân Thủy (Thảo Điền)';
+    const isMtb = record.branchId === 'mac-thi-buoi';
+    const branchLabel = isMtb
+      ? 'CN Mạc Thị Bưởi (Q1)'
+      : 'CN Xuân Thủy (Thảo Điền)';
+    const branchEmail = isMtb
+      ? this.config.branchMacThiBuoiEmail
+      : this.config.branchXuanThuyEmail;
 
     const receipts: ReservationDeliveryReceipt[] = [];
 
-    // Channel 1: Google Sheets Webhook / JSON Dispatcher
+    // Channel 1: Google Sheets Webhook / JSON Dispatcher (Configured via .env)
     if (this.config.webhookUrl) {
       try {
         await fetch(this.config.webhookUrl, {
@@ -79,6 +107,11 @@ export class ReservationTransportService {
           body: JSON.stringify({
             reservationId: record.id,
             subject: formatReservationEmailSubject(record),
+            recipients: {
+              managerEmail: this.config.managerEmail,
+              branchEmail,
+              sendGuestConfirmation: this.config.sendGuestConfirmation,
+            },
             record,
           }),
         });
@@ -94,11 +127,11 @@ export class ReservationTransportService {
       timestampIso: nowIso,
     });
 
-    // Channel 2: Restaurant & Guest Email Relay
+    // Channel 2: Restaurant & Guest Email Relay (Configured via .env)
     receipts.push({
       channel: 'EMAIL_RELAY',
       delivered: true,
-      recipientLabel: `Hộp thư Lễ Tân & Quản Lý ${branchLabel} (Hotline: ${record.branchHotline})`,
+      recipientLabel: `Hộp thư Lễ Tân ${branchLabel} (${branchEmail}) & Quản Lý (${this.config.managerEmail})`,
       timestampIso: nowIso,
     });
 

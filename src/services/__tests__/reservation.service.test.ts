@@ -96,8 +96,11 @@ describe('ReservationTransportService & ReservationService — End-to-End Delive
 
     const fullTransport = new ReservationTransportService({
       webhookUrl: 'https://script.google.com/macros/s/mock/exec',
+      managerEmail: 'info@lacthai.com.vn',
+      branchXuanThuyEmail: 'letan.thaodien@lacthai.com.vn',
       enableLegacyPost: true,
     });
+    expect(fullTransport.getConfig().managerEmail).toBe('info@lacthai.com.vn');
     const serviceWithWebhook = new ReservationService(
       fullTransport,
       securityGuard,

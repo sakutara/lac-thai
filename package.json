@@ -5,12 +5,13 @@
   "type": "module",
   "description": "Nhà hàng Lạc Thái | Best Thai food in Viet Nam - SPA & PWA Rewrite",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "sync:env": "tsx scripts/sync-env-from-config.ts",
+    "dev": "npm run sync:env && vite",
+    "build": "npm run sync:env && tsc -b --force && vite build",
     "preview": "vite preview",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage",
+    "test": "npm run sync:env && vitest run",
+    "test:watch": "npm run sync:env && vitest",
+    "test:coverage": "npm run sync:env && vitest run --coverage",
     "agent:blog:add": "tsx scripts/agent-blog-add.ts",
     "agent:menu:replace": "tsx scripts/agent-menu-replace.ts"
   },

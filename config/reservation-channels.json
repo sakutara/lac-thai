@@ -1,0 +1,16 @@
+{
+  "googleSheet": {
+    "sheetName": "Sổ Đặt Bàn Lạc Thái",
+    "spreadsheetUrl": "https://docs.google.com/spreadsheets/d/THAY_ID_GOOGLE_SHEET_TAI_DAY/edit",
+    "webhookUrl": ""
+  },
+  "emails": {
+    "generalManager": "info@lacthai.com.vn",
+    "branchMacThiBuoi": "letan.q1@lacthai.com.vn",
+    "branchXuanThuy": "letan.thaodien@lacthai.com.vn",
+    "sendGuestConfirmation": true
+  },
+  "legacyEndpoint": {
+    "enableLegacyPost": false
+  }
+}
