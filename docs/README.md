@@ -26,3 +26,5 @@ Toàn bộ tài liệu chuẩn mực của dự án được lưu trữ và qu�
 | [`ADR-007`](./adr/ADR-007-dos-ddos-protection-and-rate-limiting.md) | Quyết định kiến trúc phòng chống tấn công DoS/DDoS & bảo vệ luồng Đặt bàn Client-side. | `v1.0.0` |
 | [`ADR-008`](./adr/ADR-008-ai-agent-content-and-media-optimization-pipeline.md) | Quyết định kiến trúc tự động hóa cho AI Agent — Chuẩn hóa trang Blog mới & Tối ưu hóa hình ảnh Menu. | `v1.0.0` |
 | [`ADR-009`](./adr/ADR-009-reservation-delivery-and-notification-architecture.md) | Quyết định kiến trúc Công cụ gửi & Nơi nhận kết quả Đặt bàn đa kênh (`ReservationTransportService`). | `v1.0.0` |
+| [`ADR-010`](./adr/ADR-010-github-pages-and-config-to-env-pipeline.md) | Chiến lược Deploy GitHub Pages & Pipeline đồng bộ cấu hình Đặt bàn (`config/reservation-channels.json` → `.env`). | `v1.0.0` |
+| [`docs/RESERVATION-CHANNELS.md`](./RESERVATION-CHANNELS.md) | Tài liệu theo dõi cấu hình Google Sheet & Email nhận đặt bàn + mã Google Apps Script mẫu. | `v1.4.0` |
