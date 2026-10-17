@@ -34,9 +34,9 @@ jobs:
       - name: Run TDD Test Suite & Coverage Gate (>=90%)
         run: npm run test:coverage
 
-      - name: Build Production SPA & PWA for GitHub Pages
+      - name: Typecheck & Build Production SPA & PWA for GitHub Pages
         run: |
-          npx tsc -b
+          npx tsc -b --force
           npx vite build --base=/lac-thai/
           cp dist/index.html dist/404.html
 

@@ -15,6 +15,7 @@ coverage/
 
 # Logs & OS metadata
 *.log
+*.tsbuildinfo
 npm-debug.log*
 .DS_Store
 Thumbs.db
