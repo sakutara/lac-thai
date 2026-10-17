@@ -53,7 +53,7 @@ export const AppRoutes: React.FC = () => {
 
 export const AppRouter: React.FC = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <AppRoutes />
     </BrowserRouter>
   );
